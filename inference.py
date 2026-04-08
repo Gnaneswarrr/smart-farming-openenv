@@ -1,4 +1,5 @@
 import os
+import gradio as gr
 from openai import OpenAI
 
 from environment import AdaptiveSmartFarmingEnv
@@ -15,8 +16,10 @@ def select_action(obs):
     return "WAIT"
 
 
-def main():
-    print(f"[START] task=smart-farming env=openenv model={MODEL_NAME}")
+def run_env():
+    output = []
+
+    output.append(f"[START] task=smart-farming env=openenv model={MODEL_NAME}")
 
     total_rewards = []
     total_steps = 0
@@ -41,16 +44,14 @@ def main():
         while not done:
             action = select_action(obs)
 
-            # ✅ FIXED LINE
             obs, reward, done, _info = env.step(str(action))
 
-            # ✅ SAFE REWARD
             reward_val = float(reward) if not hasattr(reward, "value") else reward.value
 
             total_rewards.append(f"{reward_val:.2f}")
             total_steps += 1
 
-            print(
+            output.append(
                 f"[STEP] step={total_steps} action={action} "
                 f"reward={reward_val:.2f} done={str(done).lower()} error=null"
             )
@@ -59,7 +60,7 @@ def main():
 
     except Exception as e:
         success = False
-        print(
+        output.append(
             f"[STEP] step=0 action=ERROR reward=0.00 done=true error={str(e)}"
         )
 
@@ -71,10 +72,21 @@ def main():
                 pass
 
         rewards_str = ",".join(total_rewards)
-        print(
+        output.append(
             f"[END] success={str(success).lower()} steps={total_steps} rewards={rewards_str}"
         )
 
+    return "\n".join(output)
+
+
+# ✅ GRADIO UI (FIXES SPACE ERROR)
+demo = gr.Interface(
+    fn=run_env,
+    inputs=[],
+    outputs="text",
+    title="Smart Farming OpenEnv",
+    description="Click run to execute the environment"
+)
 
 if __name__ == "__main__":
-    main()
+    demo.launch()
