@@ -21,7 +21,7 @@ def main():
     total_rewards = []
     total_steps = 0
     success = False
-    env = None  # ✅ IMPORTANT
+    env = None
 
     try:
         if HF_TOKEN is None:
@@ -33,7 +33,6 @@ def main():
         task_names = list_tasks()
         selected_task = TASK_NAME if TASK_NAME in task_names else task_names[0]
 
-        # ✅ CREATE ENV INSIDE TRY
         env = AdaptiveSmartFarmingEnv()
 
         obs = env.reset()
@@ -42,9 +41,11 @@ def main():
         while not done:
             action = select_action(obs)
 
-            obs, reward, done, _info = env.step(action)
+            # ✅ FIXED LINE
+            obs, reward, done, _info = env.step(str(action))
 
-            reward_val = reward.value if hasattr(reward, "value") else float(reward)
+            # ✅ SAFE REWARD
+            reward_val = float(reward) if not hasattr(reward, "value") else reward.value
 
             total_rewards.append(f"{reward_val:.2f}")
             total_steps += 1
