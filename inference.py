@@ -1,5 +1,4 @@
 import os
-
 from openai import OpenAI
 
 from environment import AdaptiveSmartFarmingEnv
@@ -22,8 +21,7 @@ def main():
     total_rewards = []
     total_steps = 0
     success = False
-    env = AdaptiveSmartFarmingEnv()
-    client = None
+    env = None  # ✅ IMPORTANT
 
     try:
         if HF_TOKEN is None:
@@ -34,16 +32,20 @@ def main():
 
         task_names = list_tasks()
         selected_task = TASK_NAME if TASK_NAME in task_names else task_names[0]
-        _ = selected_task
+
+        # ✅ CREATE ENV INSIDE TRY
+        env = AdaptiveSmartFarmingEnv()
 
         obs = env.reset()
 
         done = False
         while not done:
             action = select_action(obs)
+
             obs, reward, done, _info = env.step(action)
 
             reward_val = reward.value if hasattr(reward, "value") else float(reward)
+
             total_rewards.append(f"{reward_val:.2f}")
             total_steps += 1
 
@@ -53,13 +55,24 @@ def main():
             )
 
         success = True
-    except Exception:
+
+    except Exception as e:
         success = False
+        print(
+            f"[STEP] step=0 action=ERROR reward=0.00 done=true error={str(e)}"
+        )
+
     finally:
-        env.close()
+        if env is not None:
+            try:
+                env.close()
+            except:
+                pass
 
         rewards_str = ",".join(total_rewards)
-        print(f"[END] success={str(success).lower()} steps={total_steps} rewards={rewards_str}")
+        print(
+            f"[END] success={str(success).lower()} steps={total_steps} rewards={rewards_str}"
+        )
 
 
 if __name__ == "__main__":
