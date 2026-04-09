@@ -7,7 +7,6 @@ app = FastAPI()
 env = None
 
 
-# ✅ Request model (IMPORTANT)
 class StepRequest(BaseModel):
     action: str
 
@@ -17,18 +16,13 @@ def reset():
     global env
     env = AdaptiveSmartFarmingEnv()
     obs = env.reset()
-
-    return {
-        "observation": obs
-    }
+    return {"observation": obs}
 
 
 @app.post("/step")
 def step(request: StepRequest):
     global env
-
     obs, reward, done, info = env.step(request.action)
-
     return {
         "observation": obs,
         "reward": float(reward),
