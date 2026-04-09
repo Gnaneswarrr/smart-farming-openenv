@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from environment import AdaptiveSmartFarmingEnv
 
@@ -7,22 +7,30 @@ app = FastAPI()
 env = None
 
 
+# ✅ Request model for /step
 class StepRequest(BaseModel):
     action: str
 
 
+# ✅ FIXED /reset (accepts empty JSON safely)
 @app.post("/reset")
-def reset():
+async def reset(request: Request):
     global env
     env = AdaptiveSmartFarmingEnv()
     obs = env.reset()
-    return {"observation": obs}
+
+    return {
+        "observation": obs
+    }
 
 
+# ✅ FIXED /step
 @app.post("/step")
 def step(request: StepRequest):
     global env
-    obs, reward, done, info = env.step(request.action)
+
+    obs, reward, done, info = env.step(str(request.action))
+
     return {
         "observation": obs,
         "reward": float(reward),
@@ -31,6 +39,7 @@ def step(request: StepRequest):
     }
 
 
+# ✅ Optional state check
 @app.get("/state")
 def state():
     return {"status": "running"}
