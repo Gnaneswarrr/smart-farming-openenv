@@ -1,0 +1,7 @@
+name: smart-farming-openenv
+description: Smart farming environment for OpenEnv validation
+
+entry_point: inference.py
+
+env:
+  name: openenv
