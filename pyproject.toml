@@ -1,6 +1,6 @@
 [project]
 name = "smart-farming-openenv"
-version = "0.1.0"
+version = "0.1.1"
 description = "Smart farming environment for OpenEnv"
 # This tells the grader which libraries to install
 dependencies = [
