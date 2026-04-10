@@ -1,3 +1,19 @@
+[project]
+name = "smart-farming-openenv"
+version = "0.1.0"
+description = "Smart farming environment for OpenEnv"
+# This tells the grader which libraries to install
+dependencies = [
+    "openenv-core>=0.2.0",
+    "fastapi",
+    "uvicorn",
+    "pydantic"
+]
+
+[project.scripts]
+# This tells the grader: "To start the server, run the main function in server/app.py"
+server = "server.app:main"
+
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
