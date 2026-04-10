@@ -1,19 +1,15 @@
 [project]
 name = "smart-farming-openenv"
-version = "0.1.1"
-description = "Smart farming environment for OpenEnv"
-# This tells the grader which libraries to install
+version = "0.1.5"  # This new version number forces a fresh validation!
 dependencies = [
     "openenv-core>=0.2.0",
+    "openai",
     "fastapi",
-    "uvicorn",
-    "pydantic"
+    "uvicorn"
 ]
 
 [project.scripts]
-# This tells the grader: "To start the server, run the main function in server/app.py"
 server = "server.app:main"
 
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.setuptools]
+py-modules = ["tasks"]
