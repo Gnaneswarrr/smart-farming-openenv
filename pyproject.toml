@@ -1,6 +1,6 @@
 [project]
 name = "smart-farming-openenv"
-version = "0.2.0"  # Changed from 0.1.5 to force the validator to update
+version = "1.0.0"
 dependencies = [
     "openenv-core>=0.2.0",
     "openai",
