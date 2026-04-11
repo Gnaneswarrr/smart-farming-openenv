@@ -1,7 +1,11 @@
+version: 1.0
 name: smart-farming-openenv
 description: Smart farming environment for OpenEnv validation
-
-entry_point: inference.py
-
-env:
-  name: openenv
+entrypoint: server.app:main
+tasks:
+  - name: task_1_soil
+    grader: tasks.smart_farming_grader
+  - name: task_2_weather
+    grader: tasks.smart_farming_grader
+  - name: task_3_yield
+    grader: tasks.smart_farming_grader
