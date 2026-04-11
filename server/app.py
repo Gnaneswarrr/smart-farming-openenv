@@ -37,3 +37,7 @@ def state():
 # This function is what the validator looks for to "start" your app
 def main():
     uvicorn.run("server.app:app", host="0.0.0.0", port=7860)
+
+# --- THIS IS THE NEW PART THE VALIDATOR NEEDS ---
+if __name__ == "__main__":
+    main()
