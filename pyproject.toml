@@ -1,6 +1,6 @@
 [project]
 name = "smart-farming-openenv"
-version = "1.0.0"
+version = "1.1.1"
 dependencies = [
     "openenv-core>=0.2.0",
     "openai",
